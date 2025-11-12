@@ -1,0 +1,30 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.929.0",
+    "@aws-sdk/lib-dynamodb": "^3.929.0",
+    "axios": "^1.13.2",
+    "compression": "^1.8.1",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "firebase-admin": "^13.6.0",
+    "helmet": "^8.1.0",
+    "morgan": "^1.10.1",
+    "uuid": "^13.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^9.39.1",
+    "nodemon": "^3.1.11",
+    "prettier": "^3.6.2"
+  }
+}

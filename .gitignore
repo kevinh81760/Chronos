@@ -1,0 +1,71 @@
+# ---------------------------
+# Global
+# ---------------------------
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.DS_Store
+.env
+.env.*
+*.pem
+*.key
+*.crt
+*.p12
+
+# ---------------------------
+# Frontend (React Native + Expo)
+# ---------------------------
+# Expo / React Native build artifacts
+.expo/
+.expo-shared/
+web-build/
+android/
+ios/
+# Metro cache
+.cache/
+# Generated asset bundles
+dist/
+build/
+# Logs
+*.log
+
+# Tailwind Native / NativeWind
+# Generated style files
+tailwind-output.css
+tailwind.config.js.timestamp
+
+# VSCode / IDE
+.vscode/
+.idea/
+*.swp
+
+# ---------------------------
+# Backend (Express + AWS + Firebase)
+# ---------------------------
+# Environment & credentials
+firebase-adminsdk.json
+firebase-service-account.json
+aws-credentials.json
+awsconfig.json
+
+# Server build
+dist/
+build/
+tmp/
+coverage/
+
+# Local database or mock data
+*.sqlite
+*.db
+data/
+
+# ---------------------------
+# Misc
+# ---------------------------
+*.tgz
+*.zip
+*.tar
+*.log
+*.pid
