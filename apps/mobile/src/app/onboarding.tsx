@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Alert } from 'react-native';
+import { View, Text, Alert, Dimensions, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { MotiView } from 'moti';
 import * as WebBrowser from 'expo-web-browser';
 import * as Google from 'expo-auth-session/providers/google';
-import { GoogleButton } from '@/components/GoogleButton';
-import { ChronosLogo } from '@/components/ChronosLogo';
+import { Video, ResizeMode } from 'expo-av';
 import { useAuth } from '@/utils/auth/useAuth';
 
 // Complete WebBrowser session on mount
@@ -33,6 +32,9 @@ export default function OnboardingScreen() {
     } else if (response?.type === 'error') {
       setLoading(false);
       Alert.alert('Authentication Error', 'Failed to sign in with Google. Please try again.');
+    } else if (response?.type === 'dismiss' || response?.type === 'cancel') {
+      // User dismissed or cancelled the auth flow
+      setLoading(false);
     }
   }, [response]);
 
@@ -84,15 +86,33 @@ export default function OnboardingScreen() {
     }
   };
 
+  const { width, height } = Dimensions.get('window');
+
   return (
-    <View className="flex-1 bg-white">
-      <StatusBar style="dark" />
+    <View className="flex-1">
+      <StatusBar style="light" />
+      
+      {/* Full-screen background video */}
+      <Video
+        source={require('../../assets/images/fireplace.mov')}
+        style={[
+          StyleSheet.absoluteFillObject,
+          {
+            width: width,
+            height: height,
+          }
+        ]}
+        resizeMode={ResizeMode.COVER}
+        shouldPlay
+        isLooping
+        isMuted
+      />
       
       {/* Main Content Container */}
-      <View className="flex-1 justify-between px-8 pt-20 pb-12">
+      <View className="flex-1 justify-between px-8 pt-16 pb-12">
         
-        {/* Logo Section - Centered */}
-        <View className="flex-1 justify-center items-center">
+        {/* Center Section - Logo and Tagline */}
+        <View className="flex-1 justify-center items-center px-4">
           <MotiView
             from={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -101,20 +121,14 @@ export default function OnboardingScreen() {
               duration: 1200,
               delay: 300,
             }}
-            className="items-center"
+            style={{ alignItems: 'center', width: '100%', marginTop: 80 }}
           >
-            {/* Logo - Replace ChronosLogo with your actual logo image */}
-            {/* Uncomment below and add your logo to assets/images/ */}
-            {/* <Image
-              source={require('../../assets/images/chronos-logo.png')}
-              style={{ width: 200, height: 200 }}
-              contentFit="contain"
-            /> */}
+            <Image 
+              source={require('../../assets/images/chronos.png')}
+              style={{ width: 80, height: 80 }}
+              resizeMode="contain"
+            />
             
-            {/* Temporary placeholder logo */}
-            <ChronosLogo size={200} />
-            
-            {/* App Name */}
             <MotiView
               from={{ opacity: 0, translateY: 20 }}
               animate={{ opacity: 1, translateY: 0 }}
@@ -123,36 +137,44 @@ export default function OnboardingScreen() {
                 duration: 800,
                 delay: 800,
               }}
+              style={{ alignItems: 'center', width: '100%' }}
             >
               <Text 
-                className="text-5xl text-black mt-8 tracking-tight"
-                style={{ fontFamily: 'MySL-BoldItalic' }}
+                style={{ 
+                  fontFamily: 'MySL-BoldItalic', 
+                  color: '#FFFFFF',
+                  fontSize: 36,
+                  marginTop: 24,
+                  textAlign: 'center'
+                }}
               >
                 Chronos
               </Text>
             </MotiView>
+          </MotiView>
 
-            {/* Tagline */}
-            <MotiView
-              from={{ opacity: 0, translateY: 20 }}
-              animate={{ opacity: 1, translateY: 0 }}
-              transition={{
-                type: 'timing',
-                duration: 800,
-                delay: 1200,
-              }}
+          <MotiView
+            from={{ opacity: 0, translateY: 20 }}
+            animate={{ opacity: 1, translateY: 0 }}
+            transition={{
+              type: 'timing',
+              duration: 800,
+              delay: 1200,
+            }}
+            style={{ marginTop: 160, marginLeft: 16 }}
+          >
+            <Text 
+              className="text-white text-center leading-relaxed"
+              style={{ fontFamily: 'MySL-BoldItalic', fontSize: 28, color: '#FFFFFF' }}
             >
-              <Text 
-                className="text-gray-600 text-center mt-4 text-base tracking-wide"
-                style={{ fontFamily: 'Montserrat' }}
-              >
-                A fully automated watch{'\n'}trading marketplace
-              </Text>
-            </MotiView>
+              Chronos is a fully{'\n'}
+              <Text className="italic" style={{ fontFamily: 'MySL-BoldItalic', fontSize: 28, color: '#FFFFFF' }}>automated</Text> watch{'\n'}
+              trading marketplace.
+            </Text>
           </MotiView>
         </View>
 
-        {/* Bottom Section - Sign In Button */}
+        {/* Bottom Section - Buttons */}
         <MotiView
           from={{ opacity: 0, translateY: 40 }}
           animate={{ opacity: 1, translateY: 0 }}
@@ -161,18 +183,59 @@ export default function OnboardingScreen() {
             duration: 800,
             delay: 1600,
           }}
+          style={{ flexDirection: 'row', justifyContent: 'center', gap: 16, marginTop: 160 }}
         >
-          <GoogleButton onPress={onSignInPress} loading={loading} />
-          
-          {/* Terms & Privacy */}
-          <Text 
-            className="text-gray-400 text-center mt-6 text-xs leading-5"
-            style={{ fontFamily: 'Montserrat' }}
+          {/* Log In Button */}
+          <TouchableOpacity
+            onPress={onSignInPress}
+            disabled={loading}
+            style={{
+              width: 190,
+              height: 62,
+              borderRadius: 31,
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: 'rgba(255, 255, 255, 0.1)',
+              borderWidth: 2,
+              borderColor: 'rgba(255, 255, 255, 0.3)',
+            }}
           >
-            By signing in, you agree to our{'\n'}
-            <Text className="text-gray-600">Terms of Service</Text> and{' '}
-            <Text className="text-gray-600">Privacy Policy</Text>
-          </Text>
+            <Text 
+              style={{ 
+                fontFamily: 'Montserrat',
+                fontSize: 20,
+                color: '#FFFFFF',
+                fontWeight: '600'
+              }}
+            >
+              Log In
+            </Text>
+          </TouchableOpacity>
+
+          {/* Join Chronos Button */}
+          <TouchableOpacity
+            onPress={onSignInPress}
+            disabled={loading}
+            style={{
+              width: 190,
+              height: 62,
+              borderRadius: 31,
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: '#FFFFFF',
+            }}
+          >
+            <Text 
+              style={{ 
+                fontFamily: 'Montserrat',
+                fontSize: 20,
+                color: '#000000',
+                fontWeight: '600'
+              }}
+            >
+              Join Chronos
+            </Text>
+          </TouchableOpacity>
         </MotiView>
       </View>
     </View>
